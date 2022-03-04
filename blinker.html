@@ -1,0 +1,139 @@
+<script>
+  // import PageManager from './page-manager';
+  import $ from 'jquery';
+  import utils from '@bigcommerce/stencil-utils';
+  import 'slick-carousel';
+
+  // export default class Blinker extends PageManager {
+  export default function() {
+
+    function init() {
+      const blinkerId = '8f888ebabe5039';
+      const $relatedPostsDiv = $('#js-blinker-related-posts');
+      const blogUrl = '/journal/';
+      const $relatedProductsDiv = $('#js-blinker-related-products');
+      const featuredPostsLimit = '3';
+      const $featuredPostsDiv = $('#js-blinker-featured-posts');
+
+      getRelatedPosts(blinkerId, $relatedPostsDiv, blogUrl);
+      getRelatedProducts(blinkerId, $relatedProductsDiv);
+      getFeaturedPosts(blinkerId, featuredPostsLimit, $featuredPostsDiv);
+    }
+
+    /**
+     * Get related blog posts (on categories, brands, and products)
+     */
+    function getRelatedPosts(id, $target, url) {
+      if ($target.length) {
+        $.get('https://blinker.gpmd.net/posts?h=' + id + '&u=' + document.location.href, null, (posts) => {
+          // console.log('Blinker posts: ', posts);
+
+          if (posts && posts.length > 0) {
+            var postsHtml = '';
+            
+            postsHtml += `
+                  <div class="blinker-related-posts__container">
+                    <h3 class="blinker-related-posts__title">Related Blog Posts</h3>
+                    <div class="blinker-related-posts__grid">
+                      `;
+            posts.forEach(post => {
+              postsHtml += `
+                    <div class="blinker-related-posts__grid-cell">
+                      <div class="blinker-related-posts__post">
+                        <a class="blinker-related-posts__post-thumbnail" title="` + post.title + `" href="` + post.url + `" style="background-image: url(` + post.thumbnail_path + `);"></a>
+                        <h5 class="blinker-related-posts__post-title"><a title="` + post.title + `" href="` + post.url + `">` + post.title + `</a></h5>
+                        <a class="blinker-related-posts__post-link" title="` + post.title + `" href="` + post.url + `">Read More</a>
+                      </div>
+                    </div>
+                  `;
+            });
+            postsHtml += `
+                    </div>
+                    <h5 class="blinker-related-posts__blog-link"><a href="` + url + `">More From The Blog</a><h5>
+                  </div>
+                `;
+            $target.html(postsHtml);
+          }
+        });
+      }
+    }
+
+    /**
+     * Get featured blog posts (on blog index)
+     */
+    function getFeaturedPosts(id, limit, $target) {
+      if ($target.length) {
+        $.get('https://blinker.gpmd.net/featured?h=' + id + '&l=' + limit, null, (posts) => {
+          // console.log('Blinker featured posts: ', posts);
+
+          $target.prepend(`<div class="heroCarousel" data-slick='{
+            "arrows": true,
+            "dots": true,
+            "mobileFirst": true,
+            "slidesToShow": 1,
+            "slidesToScroll": 1,
+            "autoplay": true,
+            "autoplaySpeed": 5000,
+            "slide": "[data-hero-slide]"
+          }'>`).append(`</div>`);
+
+          if (posts && posts.length > 0) {
+            var $carouselDiv = $('#js-blinker-featured-posts .heroCarousel');
+            var featuredPostsHtml = ``;
+
+            posts.forEach((post, i) => {
+              featuredPostsHtml += `
+                <div data-hero-slide="` + i + `">
+                  <div class="heroCarousel-slide">
+                    <a href="` + post.url + `" class="">
+                      <div class="blinker-featured-post__image" style="background-image: url(` + post.thumbnail_path + `);"></div>
+                    </a>
+                    <div class="heroCarousel-content">
+                      <p class="heroCarousel-title">` + post.title + `</p>
+                      <a href="` + post.url + `" class="heroCarousel-action button button--primary button--large">Read Post</a>
+                    </div>
+                  </div>
+                </div>
+              `;
+            });
+
+            $carouselDiv.html(featuredPostsHtml);
+            $carouselDiv.slick();
+          }
+        });
+      }
+    }
+
+    /**
+     * Get related products (on blog posts)
+     */
+    function getRelatedProducts(id, $target) {
+      if ($target.length) {
+        $.get('https://blinker.gpmd.net/products?h=' + id + '&u=' + document.location.href, null, (products) => {
+          // console.log('Blinker products: ', products);
+    
+          if (products && products.length > 0) {
+            $target.prepend('<h3 class="blinker-related-products__title">Related Products</h3><ul class="productGrid">').append('</ul');
+    
+            var $productsGridDiv = $('#js-blinker-related-products .productGrid');
+            var productsHtml = '';
+    
+            products.forEach(productId => {
+              utils.api.product.getById(productId, { template: 'blinker/blinker-related-products' }, (err, response) => {
+                if (err) return;
+    
+                productsHtml += '<li class="product">';
+                productsHtml += response;
+                productsHtml += '</li>';
+                
+                $productsGridDiv.html(productsHtml);
+              });
+            });
+          }
+        });
+      }
+    }
+
+    init();
+  }
+</script>
