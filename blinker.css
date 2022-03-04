@@ -1,0 +1,106 @@
+/*
+ * Blinker
+ */
+
+/* Related posts */
+
+.blinker-related-posts {
+  clear: both;
+}
+
+.blinker-related-posts__container {
+  padding: 32px 0;
+}
+
+.blinker-related-posts__title {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.blinker-related-posts__grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.blinker-related-posts__grid-cell {
+  width: 100%;
+  padding-bottom: 32px;
+}
+
+@media screen and (min-width: 640px) {
+  .blinker-related-posts__grid-cell {
+    width: 33%;
+  }
+}
+
+.blinker-related-posts__post {
+  padding: 0 16px;
+}
+
+.blinker-related-posts__post-thumbnail {
+  display: block;
+  height: 0;
+  overflow: hidden;
+  padding-top: 56.25%;
+  margin-bottom: 32px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.blinker-related-posts__post-title {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.blinker-related-posts__post-title a {
+    text-decoration: none;
+}
+
+.blinker-related-posts__post-title a:hover,
+.blinker-related-posts__post-title a:focus {
+  text-decoration: underline;
+}
+
+.blinker-related-posts__post-link {
+  display: block;
+  text-align: center;
+}
+
+.blinker-related-posts__blog-link {
+  display: block;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Featured posts */
+
+.blinker-featured-posts .heroCarousel {
+  margin-top: 0;
+  margin-bottom: 64px;
+}
+
+.blinker-featured-post__image {
+  display: block;
+  height: 0;
+  overflow: hidden;
+  padding-top: 50%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Related products */
+
+.blinker-related-products__title {
+  display: block;
+  margin-top: 32px;
+  margin-bottom: 32px;
+  text-align: center;
+}
