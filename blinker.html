@@ -1,13 +1,14 @@
 <script>
   function initBlinker() {
     // Config
-    const blinkerID = '4e91da36a69aac';
     const blogURL = '/journal/';
     const relatedPostsLimit = '3';
     const featuredPostsLimit = '3';
     const relatedProductsLimit = '4';
 
     // Do not change
+    // const blinkerID = '4e91da36a69aac';
+    const blinkerID = '#(.BLINKERID)#';
     const blinkerAPIPostsURL = 'https://blinker.gpmd.net/posts?h=';
     const blinkerAPIFeaturedPostsURL = 'https://blinker.gpmd.net/featured?h=';
     const pageType = '{{page_type}}';
@@ -18,7 +19,7 @@
   }
 
   // Load blinker css
-  document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/gpmd/blinker-theme@1.0.6/blinker.css" type="text/css" />');
+  document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/gpmd/blinker-theme@1.0.8/blinker.css" type="text/css" />');
 
   /**
    * Load scripts helper
