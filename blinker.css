@@ -96,28 +96,6 @@
   background-repeat: no-repeat;
 }
 
-/* Fixes for hiding the scrollbar on the carousel */
-
-.glider-track {
-  -ms-overflow-style: none; /* For Internet Explorer, Edge */
-  scrollbar-width: none; /* For Firefox */
-  overflow-y: scroll;
-}
-
-.glider-track ::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Opera */
-}
-
-/* Also for Firefox */
-@-moz-document url-prefix() {
-  .glider-track {
-    margin-bottom: 17px;
-  }
-  .glider-wrap {
-    overflow: hidden;
-  }
-}
-
 /* Related products */
 
 .blinker-related-products__title {

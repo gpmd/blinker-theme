@@ -21,7 +21,7 @@
   }
 
   // Add blinker css
-  document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/gpmd/blinker-theme@1.0.3/blinker.css" type="text/css" />');
+  document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/gpmd/blinker-theme@1.0.5/blinker.css" type="text/css" />');
 
   function initBlinker() {
     // Config
@@ -146,12 +146,10 @@
 
     target.insertAdjacentHTML('afterend', `
       <div class="glider-contain blinker-featured-posts-carousel heroCarousel">
-        <div class="glider-wrap">
-          <div id="js-blinker-featured-posts-carousel" class="glider"></div>
-          <button id="glider-prev" class="slick-prev slick-arrow" aria-label="Previous" type="button">Previous</button>
-          <button id="glider-next" class="slick-next slick-arrow" aria-label="Next" type="button">Next</button>
-          <div id="dots" class="dots slick-dots" role="tablist"></div>
-        </div>
+        <div id="js-blinker-featured-posts-carousel" class="glider"></div>
+        <button id="glider-prev" class="slick-prev slick-arrow" aria-label="Previous" type="button">Previous</button>
+        <button id="glider-next" class="slick-next slick-arrow" aria-label="Next" type="button">Next</button>
+        <div id="dots" class="dots slick-dots" role="tablist"></div>
       </div>
     `);
 
