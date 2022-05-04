@@ -1,11 +1,27 @@
-<!-- BLINKER START -->
-<!-- Jquery and slick are required for featured posts carousel -->
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" type="text/javascript"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" type="text/javascript"></script>
-
 <script>
+  /**
+   * Load scripts function
+   */
+  function loadJS(FILE_URL, async = true) {
+    let scriptEle = document.createElement("script");
+
+    scriptEle.setAttribute("src", FILE_URL);
+    scriptEle.setAttribute("type", "text/javascript");
+    scriptEle.setAttribute("async", async);
+
+    document.body.appendChild(scriptEle);
+
+    // success event 
+    scriptEle.addEventListener("load", () => {});
+
+    // error event
+    scriptEle.addEventListener("error", (ev) => {
+      console.log("Error loading file: ", ev);
+    });
+  }
+
   // Add blinker css
-  document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/gpmd/blinker-theme@1.0.2/blinker.css" type="text/css" />');
+  document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/gpmd/blinker-theme@1.0.3/blinker.css" type="text/css" />');
 
   function initBlinker() {
     // Config
@@ -21,7 +37,7 @@
     const pageType = '{{page_type}}';
 
     getRelatedPosts(blinkerID, blinkerAPIPostsURL, pageType, blogURL, relatedPostsLimit);
-    getFeaturedPosts(blinkerID, blinkerAPIFeaturedPostsURL, pageType, featuredPostsLimit);
+    getFeaturedPosts(blinkerID, blinkerAPIFeaturedPostsURL, pageType, blogURL, featuredPostsLimit);
     getRelatedProducts(blinkerID, pageType, relatedProductsLimit);
   }
 
@@ -38,7 +54,7 @@
 
       // Process our return data
       if (httpRequest.status >= 200 && httpRequest.status < 300) {
-        var response = JSON.parse(httpRequest.responseText);
+        let response = JSON.parse(httpRequest.responseText);
 
         if (response != 'undefined' && response != null) {
           return callback(page_type, blog_url, limit, response);
@@ -72,9 +88,13 @@
   /**
    * Get featured blog posts data (e.g. on blog index)
    */
-  function getFeaturedPosts(blinker_id, blinker_url, page_type, limit) {
+  function getFeaturedPosts(blinker_id, blinker_url, page_type, blog_url, limit) {
     if (page_type == 'blog') {
-      blinkerGetRequest(blinker_id, blinker_url, page_type, '', limit, processFeaturedPosts);
+      // Load required glider css & js
+      document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/glider-js@1/glider.min.css" type="text/css" />');
+      loadJS("//cdn.jsdelivr.net/npm/glider-js@1/glider.min.js", false);
+
+      blinkerGetRequest(blinker_id, blinker_url, page_type, blog_url, limit, processFeaturedPosts);
     }
   }
 
@@ -82,27 +102,27 @@
    * Process related blog posts data (on categories, brands, and products)
    */
   function processRelatedPosts(page_type, blog_url, limit, data) {
-    var relatedPosts = data;
-    var target = document.getElementById('main-content').querySelector('.container');
+    let relatedPosts = data;
+    let target = document.getElementById('main-content').querySelector('.container');
     console.log('relatedPosts: ', relatedPosts);
-    var postsHtml = '';
+    let postsHtml = '';
 
     postsHtml += `
-    <div class="blinker-related-posts__container">
-      <h3 class="blinker-related-posts__title">Related Blog Posts</h3>
-      <div class="blinker-related-posts__grid">
-        `;
+      <div class="blinker-related-posts__container">
+        <h3 class="blinker-related-posts__title">Related Blog Posts</h3>
+        <div class="blinker-related-posts__grid">
+    `;
 
     relatedPosts.slice(0, limit).forEach(post => {
       postsHtml += `
-          <div class="blinker-related-posts__grid-cell">
-            <div class="blinker-related-posts__post">
-              <a class="blinker-related-posts__post-thumbnail" title="` + post.title + `" href="` + post.url + `" style="background-image: url(` + post.thumbnail_path + `);"></a>
-              <h5 class="blinker-related-posts__post-title"><a title="` + post.title + `" href="` + post.url + `">` + post.title + `</a></h5>
-              <a class="blinker-related-posts__post-link" title="` + post.title + `" href="` + post.url + `">Read More</a>
-            </div>
+        <div class="blinker-related-posts__grid-cell">
+          <div class="blinker-related-posts__post">
+            <a class="blinker-related-posts__post-thumbnail" title="` + post.title + `" href="` + post.url + `" style="background-image: url(` + post.thumbnail_path + `);"></a>
+            <h5 class="blinker-related-posts__post-title"><a title="` + post.title + `" href="` + post.url + `">` + post.title + `</a></h5>
+            <a class="blinker-related-posts__post-link" title="` + post.title + `" href="` + post.url + `">Read More</a>
           </div>
-        `;
+        </div>
+      `;
     });
 
     postsHtml += `
@@ -118,31 +138,30 @@
    * Process related blog posts data (on categories, brands, and products)
    */
   function processFeaturedPosts(page_type, blog_url, limit, data) {
-    var featuredPosts = data;
+    let featuredPosts = data;
     console.log('featuredPosts: ', featuredPosts);
-    var target = document.querySelector('.page').querySelector('.page-heading');
+    let target = document.querySelector('.page').querySelector('.page-heading');
 
-    var postsHtml = '';
+    let postsHtml = '';
 
-    target.insertAdjacentHTML('afterend', `<div id="js-blinker-featured-posts-carousel" class="blinker-featured-posts-carousel heroCarousel" data-slick='{
-      "arrows": true,
-      "dots": true,
-      "mobileFirst": true,
-      "slidesToShow": 1,
-      "slidesToScroll": 1,
-      "autoplay": true,
-      "autoplaySpeed": 5000,
-      "slide": "[data-hero-slide]"
-    }'></div>`);
+    target.insertAdjacentHTML('afterend', `
+      <div class="glider-contain blinker-featured-posts-carousel heroCarousel">
+        <div class="glider-wrap">
+          <div id="js-blinker-featured-posts-carousel" class="glider"></div>
+          <button class="slick-prev slick-arrow" aria-label="Previous" type="button">Previous</button>
+          <button class="slick-next slick-arrow" aria-label="Next" type="button">Next</button>
+          <div role="tablist" class="dots slick-dots"></div>
+        </div>
+      </div>
+    `);
 
-    // var carouselDiv = $('#js-blinker-featured-posts .heroCarousel');
-    var carouselDiv = document.getElementById("js-blinker-featured-posts-carousel");
-    var featuredPostsHtml = ``;
+    let carouselDiv = document.getElementById("js-blinker-featured-posts-carousel");
+    let featuredPostsHtml = ``;
 
     featuredPosts.slice(0, limit).forEach((featuredPost, i) => {
       featuredPostsHtml += `
         <div data-hero-slide="` + i + `">
-          <div class="heroCarousel-slide">
+          <div class="heroCarousel-slide" style="display:block!important;">
             <a href="` + featuredPost.url + `" class="">
               <div class="blinker-featured-post__image" style="background-image: url(` + featuredPost.thumbnail_path + `);"></div>
             </a>
@@ -157,8 +176,31 @@
 
     carouselDiv.insertAdjacentHTML('afterbegin', featuredPostsHtml);
 
-    // We have to use jQuery for slick
-    $(carouselDiv).slick();
+    window.addEventListener('load', function() {
+      new Glider(document.querySelector('.glider'), {
+        slidesToShow: 1,
+        draggable: true,
+        dots: '.dots',
+        arrows: {
+          prev: '.slick-prev',
+          next: '.slick-next'
+        },
+      });
+    });
+
+    // Fix for hiding the scrollbar on the carousel in firefox
+    document.addEventListener('glider-loaded', hideFFScrollBars);
+    document.addEventListener('glider-refresh', hideFFScrollBars);
+    function hideFFScrollBars(e){
+      var scrollbarHeight = 17; // Currently 17, may change with updates
+      if(/firefox/i.test(navigator.userAgent)){
+        // We only need to appy to desktop. Firefox for mobile uses
+        // a different rendering engine (WebKit)
+        if (window.innerWidth > 575){
+          e.target.parentNode.style.height = (e.target.offsetHeight - scrollbarHeight) + 'px'
+        }
+      }
+    }
   }
 
   /**
@@ -166,7 +208,7 @@
    */
   function getRelatedProducts(blinker_id, page_type, limit) {
     if (page_type == 'blog_post') {
-      var httpRequestGetRelatedProducts = new XMLHttpRequest();
+      let httpRequestGetRelatedProducts = new XMLHttpRequest();
 
       httpRequestGetRelatedProducts.onreadystatechange = function () {
 
@@ -175,9 +217,9 @@
 
         // Process our return data
         if (httpRequestGetRelatedProducts.status >= 200 && httpRequestGetRelatedProducts.status < 300) {
-          // var relatedProducts = JSON.parse(httpRequestGetRelatedProducts.responseText);
+          // let relatedProducts = JSON.parse(httpRequestGetRelatedProducts.responseText);
           // Mock related products data
-          var relatedProducts = [
+          let relatedProducts = [
             {
               "id": "201",
               "url": "https://lim.mybigcommerce.com/all-purpose-cleaner.html",
@@ -215,13 +257,13 @@
             }
           ];
           console.log('relatedProducts: ', relatedProducts);
-          var target = document.querySelector('.blog-post-body');
+          let target = document.querySelector('.blog-post-body');
 
           if (relatedProducts != 'undefined' && relatedProducts != null) {
             target.insertAdjacentHTML('afterend', '<h3 class="blinker-related-products__title">Related Products</h3><ul id="js-product-grid" class="productGrid"></ul>');
 
-            var productGridDiv = document.getElementById("js-product-grid");
-            var relatedProductsHtml = '';
+            let productGridDiv = document.getElementById("js-product-grid");
+            let relatedProductsHtml = '';
 
             relatedProducts.slice(0, limit).forEach(product => {
               relatedProductsHtml += `
@@ -270,4 +312,3 @@
     initBlinker();
   });
 </script>
-<!-- BLINKER END -->

@@ -96,6 +96,21 @@
   background-repeat: no-repeat;
 }
 
+/* Fixes for hiding the scrollbar on the carousel */
+
+.glider-track {
+  scrollbar-width: none;
+}
+
+@-moz-document url-prefix() {
+  .glider-track {
+    margin-bottom: 17px;
+  }
+  .glider-wrap {
+    overflow: hidden;
+  }
+}
+
 /* Related products */
 
 .blinker-related-products__title {
