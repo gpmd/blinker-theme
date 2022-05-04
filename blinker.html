@@ -1,28 +1,4 @@
 <script>
-  /**
-   * Load scripts function
-   */
-  function loadJS(FILE_URL, async = true) {
-    let scriptEle = document.createElement("script");
-
-    scriptEle.setAttribute("src", FILE_URL);
-    scriptEle.setAttribute("type", "text/javascript");
-    scriptEle.setAttribute("async", async);
-
-    document.body.appendChild(scriptEle);
-
-    // success event 
-    scriptEle.addEventListener("load", () => {});
-
-    // error event
-    scriptEle.addEventListener("error", (ev) => {
-      console.log("Error loading file: ", ev);
-    });
-  }
-
-  // Add blinker css
-  document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/gpmd/blinker-theme@1.0.5/blinker.css" type="text/css" />');
-
   function initBlinker() {
     // Config
     const blinkerID = '4e91da36a69aac';
@@ -39,6 +15,30 @@
     getRelatedPosts(blinkerID, blinkerAPIPostsURL, pageType, blogURL, relatedPostsLimit);
     getFeaturedPosts(blinkerID, blinkerAPIFeaturedPostsURL, pageType, blogURL, featuredPostsLimit);
     getRelatedProducts(blinkerID, pageType, relatedProductsLimit);
+  }
+
+  // Load blinker css
+  document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/gpmd/blinker-theme@1.0.6/blinker.css" type="text/css" />');
+
+  /**
+   * Load scripts helper
+   */
+   function loadJS(FILE_URL, async = true) {
+    let scriptEle = document.createElement("script");
+
+    scriptEle.setAttribute("src", FILE_URL);
+    scriptEle.setAttribute("type", "text/javascript");
+    scriptEle.setAttribute("async", async);
+
+    document.body.appendChild(scriptEle);
+
+    // success event 
+    scriptEle.addEventListener("load", () => {});
+
+    // error event
+    scriptEle.addEventListener("error", (ev) => {
+      console.log("Error loading file: ", ev);
+    });
   }
 
   /**
@@ -80,7 +80,9 @@
    * Get related blog posts data (on categories, brands, and products)
    */
   function getRelatedPosts(blinker_id, blinker_url, page_type, blog_url, limit) {
+    // Check page type
     if (page_type == 'product' || page_type == 'category' || page_type == 'brand') {
+      // Get the data and process the result
       blinkerGetRequest(blinker_id, blinker_url, page_type, blog_url, limit, processRelatedPosts);
     }
   }
@@ -89,11 +91,13 @@
    * Get featured blog posts data (e.g. on blog index)
    */
   function getFeaturedPosts(blinker_id, blinker_url, page_type, blog_url, limit) {
+    // Check page type
     if (page_type == 'blog') {
       // Load required glider css & js
       document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/glider-js@1/glider.min.css" type="text/css" />');
       loadJS("//cdn.jsdelivr.net/npm/glider-js@1/glider.min.js", false);
 
+      // Get the data and process the result
       blinkerGetRequest(blinker_id, blinker_url, page_type, blog_url, limit, processFeaturedPosts);
     }
   }
@@ -141,7 +145,6 @@
     let featuredPosts = data;
     console.log('featuredPosts: ', featuredPosts);
     let target = document.querySelector('.page').querySelector('.page-heading');
-
     let postsHtml = '';
 
     target.insertAdjacentHTML('afterend', `
@@ -149,7 +152,7 @@
         <div id="js-blinker-featured-posts-carousel" class="glider"></div>
         <button id="glider-prev" class="slick-prev slick-arrow" aria-label="Previous" type="button">Previous</button>
         <button id="glider-next" class="slick-next slick-arrow" aria-label="Next" type="button">Next</button>
-        <div id="dots" class="dots slick-dots" role="tablist"></div>
+        <div id="dots" class="dots" role="tablist"></div>
       </div>
     `);
 
@@ -158,15 +161,13 @@
 
     featuredPosts.slice(0, limit).forEach((featuredPost, i) => {
       featuredPostsHtml += `
-        <div data-hero-slide="` + i + `">
-          <div class="heroCarousel-slide" style="display:block!important;">
-            <a href="` + featuredPost.url + `" class="">
-              <div class="blinker-featured-post__image" style="background-image: url(` + featuredPost.thumbnail_path + `);"></div>
-            </a>
-            <div class="heroCarousel-content">
-              <p class="heroCarousel-title">` + featuredPost.title + `</p>
-              <a href="` + featuredPost.url + `" class="heroCarousel-action button button--primary button--large">Read Post</a>
-            </div>
+        <div class="heroCarousel-slide" style="display:block!important;">
+          <a href="` + featuredPost.url + `" class="">
+            <div class="blinker-featured-post__image" style="background-image: url(` + featuredPost.thumbnail_path + `);"></div>
+          </a>
+          <div class="heroCarousel-content">
+            <p class="heroCarousel-title">` + featuredPost.title + `</p>
+            <a href="` + featuredPost.url + `" class="heroCarousel-action button button--primary button--large">Read Post</a>
           </div>
         </div>
       `;
@@ -174,6 +175,7 @@
 
     carouselDiv.insertAdjacentHTML('afterbegin', featuredPostsHtml);
 
+    // Initialise glider
     window.addEventListener('load', function() {
       new Glider(document.querySelector('.glider'), {
         slidesToShow: 1,
@@ -184,20 +186,6 @@
         },
       });
     });
-
-    // Fix for hiding the scrollbar on the carousel in firefox
-    document.addEventListener('glider-loaded', hideFFScrollBars);
-    document.addEventListener('glider-refresh', hideFFScrollBars);
-    function hideFFScrollBars(e){
-      var scrollbarHeight = 17; // Currently 17, may change with updates
-      if(/firefox/i.test(navigator.userAgent)){
-        // We only need to appy to desktop. Firefox for mobile uses
-        // a different rendering engine (WebKit)
-        if (window.innerWidth > 575){
-          e.target.parentNode.style.height = (e.target.offsetHeight - scrollbarHeight) + 'px'
-        }
-      }
-    }
   }
 
   /**

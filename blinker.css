@@ -96,6 +96,14 @@
   background-repeat: no-repeat;
 }
 
+.glider-dots {
+  margin-top: 32px;
+}
+
+.glider-dot.active {
+  background: #757575;
+}
+
 /* Related products */
 
 .blinker-related-products__title {
