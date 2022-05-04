@@ -97,11 +97,11 @@
 }
 
 .glider-dots {
-  margin-top: 32px;
+  margin-top: 32px !important;
 }
 
 .glider-dot.active {
-  background: #757575;
+  background: #757575 !important;
 }
 
 /* Related products */
