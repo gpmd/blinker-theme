@@ -148,9 +148,9 @@
       <div class="glider-contain blinker-featured-posts-carousel heroCarousel">
         <div class="glider-wrap">
           <div id="js-blinker-featured-posts-carousel" class="glider"></div>
-          <button class="slick-prev slick-arrow" aria-label="Previous" type="button">Previous</button>
-          <button class="slick-next slick-arrow" aria-label="Next" type="button">Next</button>
-          <div role="tablist" class="dots slick-dots"></div>
+          <button id="glider-prev" class="slick-prev slick-arrow" aria-label="Previous" type="button">Previous</button>
+          <button id="glider-next" class="slick-next slick-arrow" aria-label="Next" type="button">Next</button>
+          <div id="dots" class="dots slick-dots" role="tablist"></div>
         </div>
       </div>
     `);
@@ -179,8 +179,7 @@
     window.addEventListener('load', function() {
       new Glider(document.querySelector('.glider'), {
         slidesToShow: 1,
-        draggable: true,
-        dots: '.dots',
+        dots: '#dots',
         arrows: {
           prev: '.slick-prev',
           next: '.slick-next'
