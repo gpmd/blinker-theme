@@ -2,10 +2,16 @@
 
 > Blinker is a BigCommerce app for linking blog posts with products, categories and brands
 
-This repo contains the required assets for integrating Blinker app with your theme.
+This repo contains the Blinker app theme CSS.
 
 ## CSS CDN URL
 
 ```
-https://cdn.jsdelivr.net/gh/gpmd/blinker-theme@main/blinker.css
+https://cdn.jsdelivr.net/gh/gpmd/blinker-theme@[version]/blinker.css
+```
+
+## Minify CSS
+
+```
+yarn minify-css 
 ```
