@@ -7,7 +7,7 @@ This repo contains the Blinker app theme CSS.
 ## CSS CDN URL
 
 ```
-https://cdn.jsdelivr.net/gh/gpmd/blinker-theme@[version]/blinker.css
+https://cdn.jsdelivr.net/gh/gpmd/blinker-theme@[version]/dist/css/blinker.min.css
 ```
 
 ## Minify CSS
