@@ -1,3 +1,7 @@
+**NOTE:** This repo is no longer used.
+
+----------
+
 # Blinker Theme
 
 > Blinker is a BigCommerce app for linking blog posts with products, categories and brands
